@@ -99,13 +99,6 @@ fn main() {
         })
     }
 
-    let mut open_ports = Vec::new();
-
-    drop(tx); // Close the sender to prevent deadlock
-    for port in rx {
-        println!("Received open port: {}", port);
-        open_ports.push(port);
-    }
 
 
     // Now you can use the arguments struct
