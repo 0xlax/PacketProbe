@@ -1,9 +1,11 @@
 use std::env;
-use std::net::IpAddr;
+use std::net::{IpAddr, TCPStream};
 use std::str::FromStr;
 use std::process;
 use std::sync::mpsc::{Sender, channel};
 use std::thread;
+const MAX_PORT: u16 = 65535;
+// const MIN_PORT: u16 = 1;
 
 struct Arguments {
     flag: String,
@@ -52,6 +54,26 @@ impl Arguments {
     }
 }
 
+fn scan(tx: Sender<u16>, start_port: u16, ipaddr: IpAddr, threads: u16) {
+    let mut port = start_port + 1;
+    loop {
+        match TCPStream::connect((ipaddr, port)) {
+            Ok(_) => {
+                println!("Port {} is open on {}", port, ipaddr);
+                tx.send(port).unwrap();
+            }
+            Err(_) => {
+                // println!("Port {} is closed on {}", port, ipaddr);
+            }
+        }
+        
+        if port >= MAX_PORT {
+            break;
+        }
+        port += threads;
+    }
+}
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
@@ -70,12 +92,21 @@ fn main() {
 
     let (tx, rx) = channel();
 
-    foro i n 0..threads {
+    for i n 0..threads {
         let tx = tx.clone();
         thread::spawn(move || {
             scan(tx, i, ipaddr, threads)
         })
     }
+
+    let mut open_ports = Vec::new();
+
+    drop(tx); // Close the sender to prevent deadlock
+    for port in rx {
+        println!("Received open port: {}", port);
+        open_ports.push(port);
+    }
+
 
     // Now you can use the arguments struct
     println!("Successfully parsed arguments:");
