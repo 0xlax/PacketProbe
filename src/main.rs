@@ -84,7 +84,7 @@ fn main() {
             std::process::exit(0);
         } else {
             eprintln!("Error: {} problem parsing arguments: {}", program, err);
-            std::process::exit(1);
+            std::process::exit(0);
         }
     });
 
@@ -107,11 +107,19 @@ fn main() {
         open_ports.push(port);
     }
 
+    println!("Scan complete. Open ports: {:?}", open_ports);
+    open_ports.sort();
+    for v in &open_ports {
+        println!("Open port: {}", v);
+    }
 
 
 
-    // Now you can use the arguments struct
-    println!("Successfully parsed arguments:");
-    println!("IP Address: {}", arguments.ipaddr);
-    println!("Threads: {}", arguments.threads);
+    if open_ports.is_empty() {
+        println!("No open ports found on {}", ipaddr);
+    } else {
+        println!("Total open ports found: {}", open_ports.len());
+    }
+    process::exit(0);
+    println!("Exiting program.");
 }
