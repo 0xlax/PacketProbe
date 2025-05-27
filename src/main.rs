@@ -53,17 +53,6 @@ impl Arguments {
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    match Arguments::new(&args) {
-        Ok(arguments) => {
-            println!("Flag: {}", arguments.flag);
-            println!("IP Address: {}", arguments.ipaddr);
-            println!("Threads: {}", arguments.threads);
-        }
-        Err(e) => {
-            eprintln!("Error: {}", e);
-        }
-    }
-
     let program = args[0].clone();
 
     let arguments = Arguments::new(&args).unwrap_or_else(|err| {
@@ -71,11 +60,13 @@ fn main() {
             println!("Usage: {} <flag> [threads] <ipaddr>", program);
             std::process::exit(0);
         } else {
-            eprintln!("Error: {} problem passing arguments : {}", program, err);
+            eprintln!("Error: {} problem parsing arguments: {}", program, err);
             std::process::exit(1);
-        } else {
-
         }
-    })
+    });
 
+    // Now you can use the arguments struct
+    println!("Successfully parsed arguments:");
+    println!("IP Address: {}", arguments.ipaddr);
+    println!("Threads: {}", arguments.threads);
 }
