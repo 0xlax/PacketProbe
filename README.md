@@ -85,36 +85,3 @@ cargo run -- 127.0.0.1
 # Build with optimizations
 cargo build --release
 ```
-
-## ⚠️ System Requirements
-
-- **OS**: macOS, Linux, or Windows
-- **RAM**: 50MB minimum
-- **Disk Space**: ~10MB
-- **Permissions**: Admin/root privileges might be needed for certain port ranges
-
-## 🔒 Security Notes
-
-- Always ensure you have permission to scan the target network
-- Some networks may block or flag port scanning activities
-- Use responsibly and ethically
-
-## 📜 License
-
-MIT License - see LICENSE file for details
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 🐛 Bug Reports
-
-Please use the GitHub Issues tab to report bugs. Include:
-- OS version
-- Rust version (`rustc --version`)
-- Steps to reproduce
-- Expected vs actual behavior
