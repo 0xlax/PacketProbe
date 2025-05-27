@@ -1,5 +1,5 @@
 use std::env;
-use std::net::{IpAddr, TCPStream};
+use std::net::{IpAddr, TcpStream};
 use std::str::FromStr;
 use std::process;
 use std::sync::mpsc::{Sender, channel};
@@ -57,7 +57,7 @@ impl Arguments {
 fn scan(tx: Sender<u16>, start_port: u16, ipaddr: IpAddr, threads: u16) {
     let mut port = start_port + 1;
     loop {
-        match TCPStream::connect((ipaddr, port)) {
+        match TcpStream::connect((ipaddr, port)) {
             Ok(_) => {
                 println!("Port {} is open on {}", port, ipaddr);
                 tx.send(port).unwrap();
@@ -88,15 +88,15 @@ fn main() {
         }
     });
 
-    let (ipaddr, threads) = (arguments.ipaddr, arguments.threads)
+    let (ipaddr, threads) = (arguments.ipaddr, arguments.threads);
 
     let (tx, rx) = channel();
 
-    for i n 0..threads {
+    for i in 0..threads {
         let tx = tx.clone();
         thread::spawn(move || {
             scan(tx, i, ipaddr, threads)
-        })
+        });
     }
 
     let mut open_ports = Vec::new();
