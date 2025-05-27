@@ -2,7 +2,8 @@ use std::env;
 use std::net::IpAddr;
 use std::str::FromStr;
 use std::process;
-
+use std::sync::mpsc::{Sender, channel};
+use std::thread;
 
 struct Arguments {
     flag: String,
@@ -64,6 +65,17 @@ fn main() {
             std::process::exit(1);
         }
     });
+
+    let (ipaddr, threads) = (arguments.ipaddr, arguments.threads)
+
+    let (tx, rx) = channel();
+
+    foro i n 0..threads {
+        let tx = tx.clone();
+        thread::spawn(move || {
+            scan(tx, i, ipaddr, threads)
+        })
+    }
 
     // Now you can use the arguments struct
     println!("Successfully parsed arguments:");
